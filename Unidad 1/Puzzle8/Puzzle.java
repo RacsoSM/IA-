@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.Stack;
 
 public class Puzzle {
@@ -8,52 +9,75 @@ public class Puzzle {
     public static void main(String a[]){
           String estadoInicial ="7245 6831";
           String estadoFinal =" 12345678";
-          int contadorMovimientos = 0;
+         Scanner scanner = new Scanner(System.in);
+        int opcion;
 
-        Arbol arbol = new Arbol(new Nodo(estadoInicial, null));
-        Nodo resultado = arbol.realizarBusquedaEnAnchura(estadoFinal);
-        //iterar para llegar al nodo raiz y apartir de alli mostrar el resultado (serie de pasos)
-        Stack<String> pilaMovimientos = new Stack<>();
-
-        //metemos los resultados a la pila para obtener el orden correcto y iteramos hasta llegar a la raiz
-        while (resultado.padre != null){
-            pilaMovimientos.push(resultado.estado);
-            resultado = resultado.padre;
-        }
-
-        //lo utilizamos para comparar el primer movimiento
-        String estadoAnterior = estadoInicial;
-
-        //mostramos los pasos en orden sacandolos de la pila
-        while (!pilaMovimientos.isEmpty() ){
-            String estadoActual = pilaMovimientos.pop();
-            contadorMovimientos++;
-            detectarMovimiento(estadoAnterior, estadoActual, contadorMovimientos);
-            imprimirMovimiento(estadoActual);
-            estadoAnterior = estadoActual;
-        }
        
+        do {
+            System.out.println("--- Menú de Algoritmos de Búsqueda ---");
+            System.out.println("1. Búsqueda Primero en Anchura (BFS)");
+            System.out.println("2. Búsqueda Primero en Profundidad (DFS)");
+            System.out.println("3. Búsqueda de Costo Uniforme (UCS)");
+            System.out.println("4. Búsqueda en Profundidad Iterativa (IDS)");
+            System.out.println("0. Salir");
+            System.out.print("Seleccione una opción: ");
 
+            opcion = scanner.nextInt();
+
+            Nodo resultado = null;
+            Arbol arbol;
+
+            switch (opcion) {
+                case 1:
+                    System.out.println("\n--- Búsqueda Primero en Anchura (BFS) ---");
+                    arbol = new Arbol(new Nodo(estadoInicial, null));
+                    resultado = arbol.realizarBusquedaEnAnchura(estadoFinal);
+                    break;
+                case 2:
+                    System.out.println("\n--- Búsqueda Primero en Profundidad (DFS) ---");
+                    arbol = new Arbol(new Nodo(estadoInicial, null));
+                    resultado = arbol.realizarBusquedaEnProfundidad(estadoFinal);
+                    break;
+                case 3:
+                    System.out.println("\n--- Búsqueda de Costo Uniforme (UCS) ---");
+                    arbol = new Arbol(new Nodo(estadoInicial, null));
+                    resultado = arbol.realizarBusquedaCostoUniforme(estadoFinal);
+                    break;
+                case 4:
+                    System.out.println("\n--- Búsqueda en Profundidad Iterativa (IDS) ---");
+                    arbol = new Arbol(new Nodo(estadoInicial, null));
+                    resultado = arbol.realizarBusquedaIterativa(estadoFinal);
+                    break;
+                
+                case 0:
+                    System.out.println("Saliendo...");
+                    break;
+                default:
+                    System.out.println("Opción no válida. Intente de nuevo.");
+            }
+
+            if (opcion != 0) {
+                mostrarResultado(resultado, estadoInicial);
+            }
+
+        } while (opcion != 0);
+
+        scanner.close();
     }
 
-    //metodo para dar pequeño formato de salida
-    public static void imprimirMovimiento(String movimiento){
-        // Línea superior
+    public static void imprimirMovimiento(String movimiento) {
         System.out.println("-------------");
-
         for (int i = 0; i < movimiento.length(); i++) {
             System.out.print("| " + movimiento.charAt(i) + " ");
-
-            
             if ((i + 1) % 3 == 0) {
                 System.out.println("|");
                 System.out.println("-------------");
             }
         }
-         System.out.println("\n");
+        System.out.println("\n");
     }
-   
-     public static void detectarMovimiento(String antes, String despues, int numeroMovimiento) {
+
+    public static void detectarMovimiento(String antes, String despues, int numeroMovimiento) {
         int posEspacioAntes = antes.indexOf(' ');
         int posEspacioDespues = despues.indexOf(' ');
 
@@ -61,15 +85,11 @@ public class Puzzle {
         String direccion = obtenerDireccion(posEspacioAntes, posEspacioDespues);
 
         System.out.println("Movimiento " + numeroMovimiento + ":\t La ficha " + piezaMovida + " se movió hacia " + direccion);
+    }
 
-        }
-        
-
-     public static String obtenerDireccion(int antes, int despues) {
-        //hacemos como si fuera una matriz 3x3
+    public static String obtenerDireccion(int antes, int despues) {
         int filaAntes = antes / 3;
         int colAntes = antes % 3;
-
         int filaDespues = despues / 3;
         int colDespues = despues % 3;
 
@@ -81,7 +101,29 @@ public class Puzzle {
         return "SIN MOVIMIENTO";
     }
 
+    public static void mostrarResultado(Nodo resultado, String estadoInicial) {
+        if (resultado != null) {
+            Stack<String> pilaMovimientos = new Stack<>();
+            while (resultado.padre != null) {
+                pilaMovimientos.push(resultado.estado);
+                resultado = resultado.padre;
+            }
 
+            String estadoAnterior = estadoInicial;
+            int contadorMovimientos = 0;
 
- 
+            while (!pilaMovimientos.isEmpty()) {
+                String estadoActual = pilaMovimientos.pop();
+                contadorMovimientos++;
+                detectarMovimiento(estadoAnterior, estadoActual, contadorMovimientos);
+                imprimirMovimiento(estadoActual);
+                estadoAnterior = estadoActual;
+            }
+            System.out.println("Solución encontrada en " + contadorMovimientos + " movimientos.");
+            System.out.println("----------------------------------------\n");
+        } else {
+            System.out.println("No se encontró una solución.");
+            System.out.println("----------------------------------------\n");
+        }
+    }
 }
