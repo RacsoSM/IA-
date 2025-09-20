@@ -19,6 +19,7 @@ public class Puzzle {
             System.out.println("2. Búsqueda Primero en Profundidad (DFS)");
             System.out.println("3. Búsqueda de Costo Uniforme (UCS)");
             System.out.println("4. Búsqueda en Profundidad Iterativa (IDS)");
+            System.out.println("5. Búsqueda A* con heurística de bloques 2x2");
             System.out.println("0. Salir");
             System.out.print("Seleccione una opción: ");
 
@@ -32,23 +33,32 @@ public class Puzzle {
                     System.out.println("\n--- Búsqueda Primero en Anchura (BFS) ---");
                     arbol = new Arbol(new Nodo(estadoInicial, null));
                     resultado = arbol.realizarBusquedaEnAnchura(estadoFinal);
+                    System.out.println("Métricas: " + arbol.obtenerMetricas());
                     break;
                 case 2:
                     System.out.println("\n--- Búsqueda Primero en Profundidad (DFS) ---");
                     arbol = new Arbol(new Nodo(estadoInicial, null));
                     resultado = arbol.realizarBusquedaEnProfundidad(estadoFinal);
+                    System.out.println("Métricas: " + arbol.obtenerMetricas());
                     break;
                 case 3:
                     System.out.println("\n--- Búsqueda de Costo Uniforme (UCS) ---");
                     arbol = new Arbol(new Nodo(estadoInicial, null));
                     resultado = arbol.realizarBusquedaCostoUniforme(estadoFinal);
+                    System.out.println("Métricas: " + arbol.obtenerMetricas());
                     break;
                 case 4:
                     System.out.println("\n--- Búsqueda en Profundidad Iterativa (IDS) ---");
                     arbol = new Arbol(new Nodo(estadoInicial, null));
                     resultado = arbol.realizarBusquedaIterativa(estadoFinal);
+                    System.out.println("Métricas: " + arbol.obtenerMetricas());
                     break;
-                
+                 case 5:
+                    System.out.println("\n--- Búsqueda A* con heurística de bloques 2x2 ---");
+                    arbol = new Arbol(new Nodo(estadoInicial, null));
+                    resultado = arbol.realizarBusquedaAEstrellaBloques(estadoFinal);
+                    System.out.println("Métricas: " + arbol.obtenerMetricas());
+                    break;
                 case 0:
                     System.out.println("Saliendo...");
                     break;
@@ -75,7 +85,7 @@ public class Puzzle {
             }
         }
         System.out.println("\n");
-    }
+    } 
 
     public static void detectarMovimiento(String antes, String despues, int numeroMovimiento) {
         int posEspacioAntes = antes.indexOf(' ');
